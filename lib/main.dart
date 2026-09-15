@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:todo_app/homepage.dart';
+import 'package:todo_app/view/homepage.dart';
 
 void main(){
   runApp(const MyApp());
