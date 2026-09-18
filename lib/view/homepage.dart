@@ -16,56 +16,67 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   List listData = [];
-  int ? index;
+  // int ? index;
   @override
   void initState() {
     // initData(index!);
+    lodData();
     super.initState();
   }
+
   final TextEditingController addConttroller = TextEditingController();
-  Future<void> initData(int index) async {
+  // Future<void> initData(int index) async {
+  //   SharedPreferences pref = await SharedPreferences.getInstance();
+  //   List listData = [];
+  //   var getData = pref.getString("todo");
+  //   if (getData != null) {
+  //     listData = jsonDecode(getData);
+  //   }
+  //   addConttroller.text = listData[index]['note'];
+  // }
+
+  Future<void> lodData()async {
     SharedPreferences pref = await SharedPreferences.getInstance();
-    List listData = [];
-    var getData = pref.getString("todo");
-    if (getData != null) {
-      listData = jsonDecode(getData);
+    String ? getData =pref.getString("todo");
+    if(getData !=null){
+      setState(() {
+        listData = jsonDecode(getData);
+      });
     }
-    addConttroller.text = listData[index]['note'];
   }
 
-  void createData () async {
-    if (addConttroller.text.isEmpty) return;
-    SharedPreferences prefer = await SharedPreferences.getInstance();
-    List listData = [];
-    var data = prefer.getString("todo");
-    if (data != null) {
-      listData = jsonDecode(data);
-    }
-    Map mapData = {"note":addConttroller.text };
-    listData.add(mapData);
-    await prefer.setString("todo", jsonEncode(listData));
-    // if(addConttroller.text.isNotEmpty){
-    //   setState(() {
-    //     todos.add(addConttroller.text.trim());
-    //   });
-    // }
+  void createData()async{
+    String text = addConttroller.text.trim();
+    if(text.isEmpty) return;
 
-    // setState(() {
-    //   addConttroller.clear();
-    // });
-  }
-
-  void updateData(int index) async {
     SharedPreferences prefe = await SharedPreferences.getInstance();
-    List listData = [];
-    var getData = prefe.getString("todo");
-    if (getData != null) {
-      listData = jsonDecode(getData);
-    }
-    var update = {"note": addConttroller.text};
-    listData[index] = update;
-    prefe.setString("todo", jsonEncode(listData));
+
+    String? getData = await prefe.getString("todo");
+    // if(getData != null){
+    //
+    //
+    // }
+    Map mapData = {"notes" :text};
+    setState(() {
+      listData.add(mapData);
+    });
+    await prefe.setString("todo", jsonEncode(listData));
+    addConttroller.clear();
   }
+  // void updateData(int index) async {
+  //   SharedPreferences prefe = await SharedPreferences.getInstance();
+  //   List listData = [];
+  //   var getData = prefe.getString("todo");
+  //   if (getData != null) {
+  //     listData = jsonDecode(getData);
+  //   }
+  //
+  //   setState(() {
+  //     var update = {"note": addConttroller.text};
+  //     listData[index] = update;
+  //   });
+  //   prefe.setString("todo", jsonEncode(listData));
+  // }
 
   void removeToDo(int index) async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -131,8 +142,18 @@ class _HomepageState extends State<Homepage> {
             SizedBox(height: 50),
             Expanded(
               child: ListView.builder(
+
                 itemCount: listData.length,
                 itemBuilder: (context, index) {
+                  var item = listData[index];
+
+                  // টাইপ সেফটি চেক
+                  String noteText = "";
+                  if (item is Map) {
+                    noteText = item['note'] ?? item['notes'] ?? '';
+                  } else if (item is String) {
+                    noteText = item;
+                  }
                   return Card(
                     child: ListTile(
                       leading: CircleAvatar(
@@ -140,7 +161,7 @@ class _HomepageState extends State<Homepage> {
                         radius: 20,
                         child: Text("${index + 1}"),
                       ),
-                      title: Text(listData[index]),
+                      title: Text(noteText),
                       trailing: IconButton(
                         onPressed: () => removeToDo(index),
                         icon: Icon(Icons.delete),
