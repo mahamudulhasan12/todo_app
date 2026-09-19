@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../custom widget/app_textfield.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -12,6 +14,11 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController addressController =TextEditingController();
+  TextEditingController detailsController = TextEditingController();
   File ? fileImage;
   Future<void> getImage()async{
     final imagePicker =  ImagePicker();
@@ -43,6 +50,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: 80,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
+                    border: Border.all(width: 2,color: Colors.grey),
                     color: Color(0xFFE8EFFC),
                   ),
                   child: ClipOval(child: fileImage !=null ?Image.file(fileImage!,fit: BoxFit.cover,) : Image.asset("assets/Mahamudul.jpg",fit: BoxFit.cover,)),
@@ -58,9 +66,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           SizedBox(height: 10,),
-          Text("Use Name"),
+          AppTextField(controller: nameController, lText: "Your Name",),
+          SizedBox(height: 10,),
+          AppTextField(controller: emailController, lText: "Your Email",),
+          SizedBox(height: 10,),
+          AppTextField(controller: phoneController, lText: "Phone Number",),
+          SizedBox(height: 10,),
+          AppTextField(controller: addressController, lText: "Your Address",),
+
+          AppTextField(controller: detailsController, lText: "Details",),
+          SizedBox(height: 10,),
+          ElevatedButton(onPressed: (){}, child: Text("Save")),
+
         ],
       )
     );
   }
 }
+
+
